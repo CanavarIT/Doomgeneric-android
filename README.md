@@ -1,4 +1,7 @@
 # Doom for Android — Native Port
+<p align="center">
+  <img src="Screenshot_2026-09-12-22-35-37-968_com.example.doomandroid.jpg" width="60%" />
+</p>
 
 A native Android port of the classic DOOM (shareware) built on top of
 [doomgeneric](https://github.com/ozkl/doomgeneric). The engine is compiled
