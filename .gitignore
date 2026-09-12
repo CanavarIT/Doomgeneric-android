@@ -20,6 +20,3 @@ Thumbs.db
 
 # Логи
 *.log
-
-# WAD — не кладём в репозиторий
-app/src/main/assets/doom1.wad
