@@ -1,0 +1,25 @@
+# Gradle
+.gradle/
+build/
+app/build/
+
+# Android Studio / AndroidIDE
+.idea/
+*.iml
+local.properties
+.cxx/
+.acside/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Keystore (никогда не коммить)
+*.keystore
+*.jks
+
+# Логи
+*.log
+
+# WAD — не кладём в репозиторий
+app/src/main/assets/doom1.wad

@@ -1,0 +1,63 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.example.doomandroid'
+    compileSdk 36
+    ndkVersion "27.3.13750724"
+
+    defaultConfig {
+        applicationId "com.example.doomandroid"
+        minSdk 29
+        targetSdk 35
+        versionCode 1
+        versionName "1.0"
+
+        ndk {
+            abiFilters 'arm64-v8a'
+        }
+
+        // === Сборка нативной библиотеки отключена ===
+        // Используется готовый libdoom.so из src/main/jniLibs/arm64-v8a/
+        // externalNativeBuild {
+        //     cmake {
+        //         arguments "-DCMAKE_C_FLAGS=-femulated-tls -O3 -ffast-math -DNORMALUNIX",
+        //           "-DCMAKE_SHARED_LINKER_FLAGS=-Wl,-z,max-page-size=65536 -Wl,--no-fatal-warnings"
+        //     }
+        // }
+    }
+
+    // === Вызов CMake отключён ===
+    // externalNativeBuild {
+    //     cmake {
+    //         path "src/main/cpp/CMakeLists.txt"
+    //         version "3.31.6"
+    //     }
+    // }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['src/main/jniLibs']
+        }
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            jniDebuggable true
+        }
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    buildFeatures {
+        dataBinding true
+    }
+}
