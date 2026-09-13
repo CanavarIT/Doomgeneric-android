@@ -1,6 +1,6 @@
 # Doom for Android — Native Port
 <p align="center">
-  <img src="Screenshot_2026-09-12-22-35-37-968_com.example.doomandroid.jpg" width="60%" />
+  <img src"Screenshot_2026-09-13-12-39-00-029_com.example.doomandroid.jpg" width="60%" />
 </p>
 
 A native Android port of the classic DOOM (shareware) built on top of
@@ -104,10 +104,15 @@ correctly on Android's Bionic linker.
 
 The touch interface provides:
 
-- A virtual joystick on the left side that maps to the arrow keys.
-- A FIRE button on the lower right.
-- A USE button above it.
-- An ENTER button for menu navigation.
+- **Virtual joystick** (bottom-left) — move forward/backward, strafe left/right.
+- **FIRE** — shoot.
+- **USE** — open doors, press switches.
+- **ENTER** — confirm in menus.
+- **ESC** — open the in-game menu, go back.
+- **TAB** — toggle the automap.
+- **RUN** — toggle running. Red = off, blue = on.
+- **`<` / `>`** — previous / next weapon.
+- **Y / N** — answer confirmation dialogs (Quit, Save overwrite, Load, End Game, Nightmare).
 
 The controls are implemented as a single custom View that draws itself
 over the game surface and forwards touch events to the native engine.
@@ -154,13 +159,15 @@ id Software, ZeniMax, or Bethesda Softworks.
 ## Status
 
 The port is playable from start to finish on the shareware episode.
-Movement, shooting, doors, and menu navigation all work. The interface
-is functional but minimal: there is currently no audio, no gamepad
-support, and no on-screen layout customization.
+Movement, shooting, doors, weapon switching, ESC/TAB menu navigation,
+and Y/N confirmation dialogs all work. RUN is implemented as a toggle.
 
-Further development may add audio through AAudio or OpenSL ES, ESCAPE
-and TAB buttons, configurable button positions, and support for external
-controllers.
+The interface is functional but minimal: there is currently no audio
+and no external gamepad support. Save/load is not yet working — the
+game crashes when you attempt to save.
+
+Further development may add audio through AAudio or OpenSL ES,
+save/load support, and configurable button positions.
 
 ## Author
 
