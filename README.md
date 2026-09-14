@@ -1,6 +1,6 @@
 # Doom for Android — Native Port
 <p align="center">
-  <img src="Screenshot_2026-09-13-12-39-00-029_com.example.doomandroid.jpg" width="120%" />
+  <img src="Screenshot_2026-09-14-16-44-29-156_com.example.doomandroid.jpg" width="140%" />
 </p>
 
 A native Android port of the classic DOOM (shareware) built on top of
