@@ -2,7 +2,12 @@ package com.example.doomandroid;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -11,6 +16,7 @@ import java.io.OutputStream;
 public class MainActivity extends Activity {
 
     private TouchControlsView touchControlsView;
+    private KeyboardView keyboardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,9 +25,31 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         touchControlsView = findViewById(R.id.touchControlsView);
+        keyboardView = findViewById(R.id.keyboardView);
+
+        // Клавиатура по умолчанию скрыта.
+        keyboardView.setVisibility(View.GONE);
+
+        // Задаём высоту клавиатуры: 45% от высоты экрана.
+        // Так она занимает нижнюю часть, перекрывая игру, но оставляя
+        // верхнюю часть с сообщением Doom видимой.
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        int keyboardHeight = (int)(dm.heightPixels * 0.45f);
+        ViewGroup.LayoutParams lp = keyboardView.getLayoutParams();
+        lp.height = keyboardHeight;
+        keyboardView.setLayoutParams(lp);
+
+        // Связка: тап по кнопке ⌨ в TouchControlsView переключает клавиатуру.
+        touchControlsView.setOnKeyboardToggleListener(() -> {
+            if (keyboardView.getVisibility() == View.GONE) {
+                keyboardView.setVisibility(View.VISIBLE);
+            } else {
+                keyboardView.setVisibility(View.GONE);
+            }
+        });
 
         String wadPath = ensureWadCopied("doom1.wad");
-        DoomLib.nativeInit(wadPath);
+        DoomLib.nativeInit(wadPath, getFilesDir().getAbsolutePath());
     }
 
     @Override

@@ -17,7 +17,7 @@ import android.view.View;
  * Раскладка:
  *   - джойстик (слева внизу)
  *   - ESC, TAB (левый верх)
- *   - N, Y (правый верх, столбиком)
+ *   - N, Y, ⌨ (правый верх, столбиком / в ряд)
  *   - < > (над RUN/ENTER) — переключение оружия
  *   - RUN (правее ENTER) — тумблер бега
  *   - ENTER, USE, FIRE (справа снизу)
@@ -36,6 +36,7 @@ public class TouchControlsView extends View {
     private final Paint runOffPaint = new Paint();
     private final Paint runOnPaint = new Paint();
     private final Paint yesNoPaint = new Paint();
+    private final Paint keyboardPaint = new Paint();
     private final Paint textPaint = new Paint();
     private final Paint smallTextPaint = new Paint();
 
@@ -50,6 +51,7 @@ public class TouchControlsView extends View {
     private float nextWpnBtnX, nextWpnBtnY;
     private float yesBtnX, yesBtnY;
     private float noBtnX, noBtnY;
+    private float keyboardBtnX, keyboardBtnY;
     private float btnRadius;
     private float smallRadius;
     private float ynRadius;
@@ -66,6 +68,16 @@ public class TouchControlsView extends View {
     private int pendingPrevWeaponKey = 0;
     private int pendingNextWeaponKey = 0;
 
+    /** Listener: вызывается, когда игрок тапает по кнопке «⌨». */
+    public interface OnKeyboardToggleListener {
+        void onToggle();
+    }
+    private OnKeyboardToggleListener keyboardToggleListener = null;
+
+    public void setOnKeyboardToggleListener(OnKeyboardToggleListener l) {
+        this.keyboardToggleListener = l;
+    }
+
     private static final int DIR_UP = 1, DIR_DOWN = 2, DIR_LEFT = 4, DIR_RIGHT = 8;
 
     public TouchControlsView(Context context, AttributeSet attrs) {
@@ -79,6 +91,7 @@ public class TouchControlsView extends View {
         runOffPaint.setColor(Color.argb(140, 220, 60, 60));
         runOnPaint.setColor(Color.argb(180, 60, 140, 255));
         yesNoPaint.setColor(Color.argb(140, 220, 200, 60));
+        keyboardPaint.setColor(Color.argb(160, 160, 80, 220));   // фиолетовый
         textPaint.setColor(Color.WHITE);
         textPaint.setTextSize(28f);
         textPaint.setTextAlign(Paint.Align.CENTER);
@@ -97,30 +110,25 @@ public class TouchControlsView extends View {
         joyCenterY = prefs.getFloat("joy_y", h - joyRadius * 1.6f);
 
         btnRadius = joyRadius * 0.7f;
-        smallRadius = joyRadius * 0.42f;   // чуть меньше — чтобы < > не выходили на экран
+        smallRadius = joyRadius * 0.42f;
         ynRadius = joyRadius * 0.38f;
 
-        // FIRE, USE — как было
         fireBtnX  = prefs.getFloat("fire_x",  w - btnRadius * 1.6f);
         fireBtnY  = prefs.getFloat("fire_y",  h - btnRadius * 1.6f);
         useBtnX   = prefs.getFloat("use_x",   w - btnRadius * 3.2f);
         useBtnY   = prefs.getFloat("use_y",   h - btnRadius * 3.2f);
 
-        // ENTER — как было
         enterBtnX = w - btnRadius * 3.2f;
         enterBtnY = h - btnRadius * 5.0f;
 
-        // RUN — правее ENTER (за ним, ближе к краю)
         runBtnX = w - btnRadius * 1.4f;
         runBtnY = h - btnRadius * 5.0f;
 
-        // ESC и TAB — в одну строку, слева вверху
         escBtnX = smallRadius * 1.2f;
         escBtnY = smallRadius * 1.2f;
         tabBtnX = smallRadius * 3.4f;
         tabBtnY = smallRadius * 1.2f;
 
-        // < и > — над RUN/ENTER, сдвинуты правее, чтобы не заходить на экран Doom
         float wpnCenterX = w - btnRadius * 2.3f;
         float wpnRowY = h - btnRadius * 6.8f;
         prevWpnBtnX = wpnCenterX - smallRadius * 1.4f;
@@ -128,11 +136,15 @@ public class TouchControlsView extends View {
         nextWpnBtnX = wpnCenterX + smallRadius * 1.4f;
         nextWpnBtnY = wpnRowY;
 
-        // Y/N — правый верх, столбиком: N сверху, Y под ним
+        // Y/N — правый верх, столбиком
         noBtnX  = w - ynRadius * 1.4f;
         noBtnY  = ynRadius * 1.4f;
         yesBtnX = w - ynRadius * 1.4f;
         yesBtnY = ynRadius * 3.6f;
+
+        // ⌨ — слева от N/Y, в верхнем правом углу (на одной линии с N)
+        keyboardBtnX = w - ynRadius * 4.0f;
+        keyboardBtnY = ynRadius * 1.4f;
 
         Log.d(TAG, "onSizeChanged w=" + w + " h=" + h
                 + " joy=(" + joyCenterX + "," + joyCenterY + ") r=" + joyRadius
@@ -171,11 +183,11 @@ public class TouchControlsView extends View {
         canvas.drawCircle(enterBtnX, enterBtnY, btnRadius, enterPaint);
         canvas.drawText("ENTER", enterBtnX, enterBtnY + 10, textPaint);
 
-        // RUN — правее ENTER
+        // RUN
         canvas.drawCircle(runBtnX, runBtnY, btnRadius, runActive ? runOnPaint : runOffPaint);
         canvas.drawText("RUN", runBtnX, runBtnY + 10, textPaint);
 
-        // < и > — над RUN/ENTER
+        // < и >
         canvas.drawCircle(prevWpnBtnX, prevWpnBtnY, smallRadius, weaponPaint);
         canvas.drawText("<", prevWpnBtnX, prevWpnBtnY + 12, textPaint);
 
@@ -188,6 +200,10 @@ public class TouchControlsView extends View {
 
         canvas.drawCircle(yesBtnX, yesBtnY, ynRadius, yesNoPaint);
         canvas.drawText("Y", yesBtnX, yesBtnY + 8, smallTextPaint);
+
+        // ⌨ — клавиатура
+        canvas.drawCircle(keyboardBtnX, keyboardBtnY, ynRadius, keyboardPaint);
+        canvas.drawText("⌨", keyboardBtnX, keyboardBtnY + 10, smallTextPaint);
     }
 
     @Override
@@ -215,6 +231,11 @@ public class TouchControlsView extends View {
                 else if (dist(x, y, nextWpnBtnX, nextWpnBtnY) < smallRadius) { pressNextWeapon(pointerId); }
                 else if (dist(x, y, yesBtnX, yesBtnY) < ynRadius)     { press(pointerId, 10, DoomKeys.Y); }
                 else if (dist(x, y, noBtnX,  noBtnY)  < ynRadius)     { press(pointerId, 11, DoomKeys.N); }
+                else if (dist(x, y, keyboardBtnX, keyboardBtnY) < ynRadius) {
+                    if (keyboardToggleListener != null) {
+                        keyboardToggleListener.onToggle();
+                    }
+                }
                 break;
             }
             case MotionEvent.ACTION_MOVE: {
