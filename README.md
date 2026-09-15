@@ -4,6 +4,10 @@
   <img src="Screenshot_2026-09-14-16-44-29-156_com.example.doomandroid.jpg" width="100%" />
 </p>
 
+<p align="center">
+  <img src="1000632332_converted.gif" width="100%" />
+</p>
+
 A native Android port of the classic DOOM (shareware) built on top of
 [doomgeneric](https://github.com/ozkl/doomgeneric). The engine is compiled
 directly to ARM64 via the Android NDK and linked with the Java layer through
