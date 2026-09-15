@@ -1,6 +1,6 @@
 # Doom for Android — Native Port
 <p align="center">
-  <img src="Screenshot_2026-09-13-12-39-00-029_com.example.doomandroid.jpg" width="120%" />
+  <img src="Screenshot_2026-09-14-16-44-29-156_com.example.doomandroid.jpg" width="140%" />
 </p>
 
 A native Android port of the classic DOOM (shareware) built on top of
@@ -154,20 +154,34 @@ id Software, ZeniMax, or Bethesda Softworks.
 - id Software for creating DOOM and releasing the source code.
 - The doomgeneric project for providing a portable base.
 - The Android NDK team for making native development on Android
-  practical.
-
+  
 ## Status
 
-The port is playable from start to finish on the shareware episode.
-Movement, shooting, doors, weapon switching, ESC/TAB menu navigation,
-and Y/N confirmation dialogs all work. RUN is implemented as a toggle.
+The port is fully playable from start to finish on the shareware episode.
 
-The interface is functional but minimal: there is currently no audio
-and no external gamepad support. Save/load is not yet working — the
-game crashes when you attempt to save.
+**What works:**
 
-Further development may add audio through AAudio or OpenSL ES,
-save/load support, and configurable button positions.
+- Movement, shooting, doors, switches
+- Weapon switching (`<` / `>`)
+- In-game menu (ESC) and automap (TAB)
+- Confirmation dialogs (Y / N)
+- RUN toggle (red = off, blue = on)
+- Sound effects — gunshots, footsteps, doors, monsters
+- Two colour variants: BlueDoom and OriginDoom
+
+**What's missing (planned):**
+
+- **Music** — OPL emulation is not yet implemented. Sound effects work,
+  but there is currently no background music.
+- **Save / load** — the game crashes when you try to save. Not yet
+  functional.
+- **External gamepad support** — currently touch-only.
+- **Configurable button layout** — buttons are fixed to their positions.
+
+**Requirements:**
+
+- Android 10 (API 29) or later
+- ARM64 device (all modern phones)
 
 ## Author
 
