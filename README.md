@@ -59,12 +59,14 @@ consumed by the engine on its own game thread.
 The Android side contains:
 
 - `MainActivity` — sets up the view hierarchy, copies the WAD file from
-  assets to internal storage, and starts the native engine.
+  assets to internal storage, starts the native engine, and handles
+  gamepad connect/disconnect.
 - `DoomSurfaceView` — a SurfaceView that owns the 640x400 Bitmap used
   as the framebuffer target. Frames are requested through Choreographer
   and blitted to the screen.
 - `TouchControlsView` — draws the virtual joystick and buttons on top of
-  the game surface, and translates touch events into DOOM key codes.
+  the game surface, translates touch events into DOOM key codes, and
+  provides a full control editor.
 - `KeyboardView` — on-screen keyboard for entering save names (A–Z, 0–9,
   Space, Backspace, Enter). Appears by tapping the ⌨ button.
 - `DoomLib` — static native method declarations that match the JNI
@@ -126,7 +128,7 @@ sound effects and music output.
 
 ## Controls
 
-The touch interface provides:
+### Touch controls
 
 - **Virtual joystick** (bottom-left) — move forward/backward, strafe left/right.
 - **FIRE** — shoot.
@@ -137,11 +139,34 @@ The touch interface provides:
 - **RUN** — toggle running. Red = off, blue = on.
 - **`<` / `>`** — previous / next weapon.
 - **Y / N** — answer confirmation dialogs (Quit, Save overwrite, Load, End Game, Nightmare).
-- **⌨ (keyboard)** — opens the on-screen keyboard for entering save
-  names. Tap again to hide.
+- **⌨ (keyboard)** — opens the on-screen keyboard for entering save names. Tap again to hide.
 
-The controls are implemented as custom Views drawn over the game surface,
-forwarding touch events to the native engine.
+### Control editor
+
+Tap three times quickly on an empty area of the screen to open the editor.
+
+- Drag any button to move it
+- Pinch with two fingers to resize a button (each button has its own size)
+- **DELETE** — remove a button you don’t need
+- **RESET** — restore the original layout
+- **DONE** — save and exit
+
+The custom layout is saved and restored on the next launch.
+
+### Gamepad support
+
+Bluetooth and USB gamepads are fully supported.
+
+- Left stick / D-pad — movement
+- A / R1 / R2 — FIRE
+- X / L1 — USE
+- B / Select — ENTER
+- Start / Mode — ESC
+- Y — TAB
+- L2 / Left stick press — RUN
+
+When a gamepad is connected, all on-screen touch buttons are automatically hidden.
+When the gamepad is disconnected, the touch controls return immediately.
 
 ## Why the engine is not built through CMake
 
@@ -173,12 +198,15 @@ The port is fully playable from start to finish on the shareware episode.
 - Sound effects — gunshots, footsteps, doors, monsters
 - OPL music emulation (Nuked OPL3) — background music
 - Save and load game with on-screen keyboard
+- Full gamepad support (Bluetooth / USB)
+- Control editor — move, resize, delete and reset buttons
 - Custom app icon
 
-**What's missing (planned):**
+**What's planned:**
 
-- External gamepad support — currently touch-only
-- Configurable button layout — buttons are fixed to their positions
+- Physical / external keyboard support
+
+This is enough for a complete and comfortable shareware DOOM experience on Android.
 
 **Requirements:**
 
