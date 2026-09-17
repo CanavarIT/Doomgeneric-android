@@ -20,7 +20,7 @@ public final class DoomKeys {
     public static final int ENTER      = 13;
     public static final int TAB        = 9;
     public static final int SPACE      = 32;
-    public static final int BACKSPACE  = 8;
+    public static final int BACKSPACE  = 0x7f;
 
     // Подтверждения в диалогах
     public static final int Y          = 'y';    // 121
