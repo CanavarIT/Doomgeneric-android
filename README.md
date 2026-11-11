@@ -1,3 +1,5 @@
+# the project was moved to https://github.com/CanavarIT/DoomGen I advise you to download it from there
+
 # Doom for Android — Native Port
 
 <p align="center">
